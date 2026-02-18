@@ -1,6 +1,8 @@
 package com.alura.literatura.main;
 
+import com.alura.literatura.model.Autores;
 import com.alura.literatura.model.DatosLibros;
+import com.alura.literatura.model.Libros;
 import com.alura.literatura.model.RespuestaOriginal;
 import com.alura.literatura.service.ConsumoAPI;
 import com.alura.literatura.service.ConvertirDatos;
@@ -53,6 +55,10 @@ public class Main {
         String jsonRespuesta = consumoAPI.consultoBase(urlFinal);
         RespuestaOriginal respuestaOriginal = convertirDatos.obtenerDatos(jsonRespuesta, RespuestaOriginal.class);
         DatosLibros datosLibros = respuestaOriginal.libros().getFirst();
-        System.out.println(datosLibros);
+        Libros libro = new Libros(datosLibros);
+        Autores autor = new Autores(datosLibros.autor().getFirst());
+
+        System.out.println(libro);
+        System.out.println(autor);
     }
 }
