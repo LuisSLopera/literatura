@@ -6,5 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.Optional;
 
 public interface AutoresRepository extends JpaRepository <Autores,Long> {
-    Optional<Autores> findByNombreContainsIgnoreCaseAndFechaNacimiento(String nombre, Integer FechaNacimiento);
+    Optional<Autores> findByNombreContainsIgnoreCaseAndFechaNacimiento(String nombre, Integer fechaNacimiento);
+
+    Optional<Autores> findByFechaNacimiento(Integer fechaNacimiento);
 }
