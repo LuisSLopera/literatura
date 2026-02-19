@@ -1,11 +1,23 @@
 package com.alura.literatura.model;
 
+import jakarta.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
+@Entity
+@Table(name = "autores")
 public class Autores {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idAutor;
     private String nombre;
     private Integer fechaNacimiento;
     private Integer fechaMuerte;
+
+    @OneToMany(mappedBy = "autor")
+    private List<Libros> libros = new ArrayList<>();
+
+    public Autores(){}
 
     public Autores(DatosAutor datosAutor) {
         this.nombre = datosAutor.nombre();
@@ -43,6 +55,14 @@ public class Autores {
 
     public void setFechaMuerte(Integer fechaMuerte) {
         this.fechaMuerte = fechaMuerte;
+    }
+
+    public List<Libros> getLibros() {
+        return libros;
+    }
+
+    public void setLibros(List<Libros> libros) {
+        this.libros = libros;
     }
 
     @Override

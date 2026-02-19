@@ -4,18 +4,30 @@ import com.alura.literatura.model.Autores;
 import com.alura.literatura.model.DatosLibros;
 import com.alura.literatura.model.Libros;
 import com.alura.literatura.model.RespuestaOriginal;
+import com.alura.literatura.repository.AutoresRepository;
+import com.alura.literatura.repository.LibrosRepository;
 import com.alura.literatura.service.ConsumoAPI;
 import com.alura.literatura.service.ConvertirDatos;
 
-import java.net.URL;
+import java.util.Optional;
 import java.util.Scanner;
 
 public class Main {
 
-    Scanner entrada = new Scanner(System.in);
-    String URL_BASE ="https://gutendex.com/books/";
-    ConsumoAPI consumoAPI = new ConsumoAPI();
-    ConvertirDatos convertirDatos = new ConvertirDatos();
+    private Scanner entrada = new Scanner(System.in);
+    private String URL_BASE ="https://gutendex.com/books/";
+    private ConsumoAPI consumoAPI = new ConsumoAPI();
+    private ConvertirDatos convertirDatos = new ConvertirDatos();
+    private AutoresRepository autoresRepository;
+    private LibrosRepository librosRepository;
+    private Optional<Libros> libroBuscado;
+    private Optional<Autores> autorBuscado;
+
+    public Main(AutoresRepository autoresRepository, LibrosRepository librosRepository) {
+        this.autoresRepository = autoresRepository;
+        this.librosRepository = librosRepository;
+    }
+
 
     public void menu(){
 
@@ -57,8 +69,24 @@ public class Main {
         DatosLibros datosLibros = respuestaOriginal.libros().getFirst();
         Libros libro = new Libros(datosLibros);
         Autores autor = new Autores(datosLibros.autor().getFirst());
+        libro.setAutor(autor);
 
-        System.out.println(libro);
-        System.out.println(autor);
+        autorBuscado = autoresRepository.findByNombreContainsIgnoreCaseAndFechaNacimiento(autor.getNombre(),autor.getFechaNacimiento());
+        libroBuscado = librosRepository.findByTitulo(libro.getTitulo());
+
+        if (autorBuscado.isPresent()){
+
+        } else {
+            autoresRepository.save(autor);
+        }
+
+        if (libroBuscado.isPresent()){
+            System.out.println("El libro ya sta cargado");
+        } else{
+            librosRepository.save(libro);
+            System.out.println(libro);
+            System.out.println(autor);
+        }
+
     }
 }
